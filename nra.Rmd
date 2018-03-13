@@ -1,0 +1,21 @@
+---
+title: Replication Data for Jena and Olenski (2018)
+author: David Kanew
+date: March 23, 2018
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+Purpose of this docuemnt is to provide a tour of some of the data associated with Jena and Olenski (2018).[^1]
+
+```{r}
+agg_data <- read_csv("aggregate.csv")
+yearly <- read_csv("yearly.csv")
+```
+
+
+[^1]: Jena AB, Olenski AR. [Reduction in firearm injuries during NRA annual conventions](http://www.nejm.org/doi/full/10.1056/NEJMc1712773). N Engl J Med 2018;378:866-7. DOI: 10.1056/NEJMc1712773. Thanks to Anupam Jena for providing the data.
