@@ -13,8 +13,7 @@ library(tidyverse)
 Purpose of this docuemnt is to provide a tour of some of the data associated with Jena and Olenski (2018).[^1]
 
 ```{r}
-agg_data <- read_csv("aggregate.csv")
-yearly <- read_csv("yearly.csv")
+x <- read_csv("yearly.csv")
 ```
 
 
