@@ -12,8 +12,9 @@ library(tidyverse)
 
 Purpose of this docuemnt is to provide a tour of some of the data associated with Jena and Olenski (2018).[^1]
 
-```{r}
+```{r, message=FALSE}
 x <- read_csv("yearly.csv")
+glimpse(x)
 ```
 
 
