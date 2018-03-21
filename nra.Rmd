@@ -1,5 +1,5 @@
 ---
-title: Replication Data for Jena and Olenski (2018)
+title: Partial Replication Data for Jena and Olenski (2018)
 author: David Kanew
 date: March 23, 2018
 output: html_document
@@ -14,6 +14,7 @@ Purpose of this docuemnt is to provide a tour of some of the data associated wit
 
 ```{r, message=FALSE}
 x <- read_csv("yearly.csv")
+x$year <- as.factor(x$year)
 glimpse(x)
 ```
 
