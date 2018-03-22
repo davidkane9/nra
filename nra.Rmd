@@ -1,6 +1,6 @@
 ---
 title: Partial Replication Data for Jena and Olenski (2018)
-author: David Kanew
+author: David Kane
 date: March 22, 2018
 output: html_document
 ---
@@ -25,13 +25,9 @@ x %>% group_by(convention) %>%
   summarize(gunshots = sum(gunshot), totals = sum(total)) %>% 
   mutate(total_rate = 100000 * gunshots/totals)
 ```
-These total rates match those in the article. Convention weeks seem to be much safer than non-convention weeks! I don't know how they calculate a relative difference of 20.1% or the associated confidence interval of 6.7% to 34.0%. I see the rate outside of convention dates as 
-`r round((1.48871/1.185288 - 1) * 100, 1)`% higher than the rate during NRA conventions, 
-with an associated confidence interval of 
-`r round(as.numeric(prop.test(c(963, 129), c(64684217, 10883433))$conf.int * 100000) * 100, 2)[1]`% to
-`r round(as.numeric(prop.test(c(963, 129), c(64684217, 10883433))$conf.int * 100000) * 100, 2)[2]`%.
+These total rates match those in the article. Convention weeks seem to be much safer than non-convention weeks! There is a 20.1% decline in the injury rate (from 1.49 to 1.18), with an associated confidence interval of 6.7% to 34.0%.[^2] Perhaps the most surprising thing about this analysis is the **magnitude** of the effect. How can the NRA convention, which is attended by way fewer than 1% of all US gun owners, cause a 20% drop in gun-related injuries?[^3]
 
-We can also look at the data by the seven individual weeks surrounding the convention, thereby producing a graphic not dissimilar to their Figure 1 (B). 
+We can also look at the data by the seven individual weeks surrounding the convention, thereby producing a graphic not dissimilar to their Figure 1 (B) and a close match to their Figure S1. 
 
 ```{r, echo=FALSE}
 x %>% group_by(date) %>% summarize(gunshots = sum(gunshot), totals = sum(total), 
@@ -49,9 +45,9 @@ x %>% group_by(date) %>% summarize(gunshots = sum(gunshot), totals = sum(total),
 ```
 
 
-I prefer to look at the data for each year x date combination separately. We 
+I prefer to look at the data for each year-by-date combination separately. We 
 have `r length(unique(x$year))` unique years from `r min(as.numeric(as.character(x$year)))` through 
-`r max(as.numeric(as.character(x$year)))`. We have 7 dates for each year, the convention week (date 0) and the three weeks before and the three weeks after. So, we have 63 observations. Let's examine the rate of firearm injuries per 100,000 hospital visits for each year x date combination.
+`r max(as.numeric(as.character(x$year)))`. We have 7 dates for each year, the convention week (date 0) and the three weeks before and the three weeks after. So, we have 63 observations. Let's examine the rate of firearm injuries per 100,000 hospital visits for each year-by-date.
 
 
 ```{r, echo = FALSE}
@@ -67,3 +63,7 @@ ggplot(data = x, aes(date, 100000 * gunshot/total)) +
 Whether or not smoothing the observations makes sense depends on your priors about the relationships among injury rates over time.
 
 [^1]: Jena AB, Olenski AR. [Reduction in firearm injuries during NRA annual conventions](http://www.nejm.org/doi/full/10.1056/NEJMc1712773). N Engl J Med 2018;378:866-7. DOI: 10.1056/NEJMc1712773. Thanks to Anupam Jena for providing the data and for helpful discussion.
+
+[^2]: I am not sure how this confidence interval is calculated. 
+
+[^3]: See related discussion at Andrew Gelman's [blog](http://andrewgelman.com/2018/03/05/no-dont-believe-reduction-firearm-injuries-nra-annual-conventions-story/).
