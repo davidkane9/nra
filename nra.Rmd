@@ -1,7 +1,7 @@
 ---
 title: Partial Replication Data for Jena and Olenski (2018)
 author: David Kanew
-date: March 23, 2018
+date: March 22, 2018
 output: html_document
 ---
 
@@ -15,8 +15,55 @@ Purpose of this docuemnt is to provide a tour of some of the data associated wit
 ```{r, message=FALSE}
 x <- read_csv("yearly.csv")
 x$year <- as.factor(x$year)
-glimpse(x)
+x$convention <- ifelse(x$date == 0, TRUE, FALSE)
+```
+
+With this raw data, we can calculate the total firearm injuries and hospital visits and then, with those totals, calculate a rate per 100,000, as in the article.
+
+```{r}
+x %>% group_by(convention) %>% 
+  summarize(gunshots = sum(gunshot), totals = sum(total)) %>% 
+  mutate(total_rate = 100000 * gunshots/totals)
+```
+These total rates match those in the article. Convention weeks seem to be much safer than non-convention weeks! I don't know how they calculate a relative difference of 20.1% or the associated confidence interval of 6.7% to 34.0%. I see the rate outside of convention dates as 
+`r round((1.48871/1.185288 - 1) * 100, 1)`% higher than the rate during NRA conventions, 
+with an associated confidence interval of 
+`r round(as.numeric(prop.test(c(963, 129), c(64684217, 10883433))$conf.int * 100000) * 100, 2)[1]`% to
+`r round(as.numeric(prop.test(c(963, 129), c(64684217, 10883433))$conf.int * 100000) * 100, 2)[2]`%.
+
+We can also look at the data by the seven individual weeks surrounding the convention, thereby producing a graphic not dissimilar to their Figure 1 (B). 
+
+```{r, echo=FALSE}
+x %>% group_by(date) %>% summarize(gunshots = sum(gunshot), totals = sum(total), 
+                                   rate = 100000 * gunshots/totals, 
+                                   rate_low = as.numeric(prop.test(gunshots, totals)$conf.int[1] * 100000),
+                                   rate_high = as.numeric(prop.test(gunshots, totals)$conf.int[2] * 100000)
+                                   ) %>% 
+  ggplot(aes(date, rate)) + 
+    geom_point() +
+    geom_errorbar(aes(ymin = rate_low, ymax = rate_high, width = 0.1)) +
+  ggtitle("Firearm Injuries among Commercially Insured Persons That Occurred on\nDates of National Rifle Association (NRA) Annual Conventions and Control Dates,\n 2007–2015.") +
+  xlab("Weeks Relative to NRA Convention") +
+  ylab("Rate of Firearm Injuries\n(beneficiaries with an injury per 100,000 persons)") + 
+  ylim(0, 2)
 ```
 
 
-[^1]: Jena AB, Olenski AR. [Reduction in firearm injuries during NRA annual conventions](http://www.nejm.org/doi/full/10.1056/NEJMc1712773). N Engl J Med 2018;378:866-7. DOI: 10.1056/NEJMc1712773. Thanks to Anupam Jena for providing the data.
+I prefer to look at the data for each year x date combination separately. We 
+have `r length(unique(x$year))` unique years from `r min(as.numeric(as.character(x$year)))` through 
+`r max(as.numeric(as.character(x$year)))`. We have 7 dates for each year, the convention week (date 0) and the three weeks before and the three weeks after. So, we have 63 observations. Let's examine the rate of firearm injuries per 100,000 hospital visits for each year x date combination.
+
+
+```{r, echo = FALSE}
+ggplot(data = x, aes(date, 100000 * gunshot/total)) + 
+  geom_point() +
+  geom_smooth(method = "loess") + 
+  scale_x_discrete(limits = seq(-3, 3, by = 1)) +
+  ggtitle("Firearm Injury Rate per 100,000 Hospital Visits Around NRA Conventions") +
+  ylab("Firearm Injury Rate per 100,000") +
+  xlab("Weeks Around NRA Conventions")
+```
+
+Whether or not smoothing the observations makes sense depends on your priors about the relationships among injury rates over time.
+
+[^1]: Jena AB, Olenski AR. [Reduction in firearm injuries during NRA annual conventions](http://www.nejm.org/doi/full/10.1056/NEJMc1712773). N Engl J Med 2018;378:866-7. DOI: 10.1056/NEJMc1712773. Thanks to Anupam Jena for providing the data and for helpful discussion.
