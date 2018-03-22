@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-Purpose of this docuemnt is to provide a tour of some of the data associated with Jena and Olenski (2018).[^1]
+Purpose of this document is to provide a tour of some of the data associated with Jena and Olenski (2018).[^1]
 
 ```{r, message=FALSE}
 x <- read_csv("yearly.csv")
