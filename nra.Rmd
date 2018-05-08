@@ -16,6 +16,7 @@ Purpose of this document is to provide a tour of some of the data associated wit
 x <- read_csv("yearly.csv")
 x$year <- as.factor(x$year)
 x$convention <- ifelse(x$date == 0, TRUE, FALSE)
+x$rate <- (100000 * x$gunshot)/x$total
 ```
 
 With this raw data, we can calculate the total firearm injuries and hospital visits and then, with those totals, calculate a rate per 100,000, as in the article.
@@ -23,7 +24,7 @@ With this raw data, we can calculate the total firearm injuries and hospital vis
 ```{r}
 x %>% group_by(convention) %>% 
   summarize(gunshots = sum(gunshot), totals = sum(total)) %>% 
-  mutate(total_rate = 100000 * gunshots/totals)
+  mutate(total_rate = 100000 * gunshots/totals) -> y
 ```
 These total rates match those in the article. Convention weeks seem to be much safer than non-convention weeks! There is a 20.1% decline in the injury rate (from 1.49 to 1.18), with an associated confidence interval of 6.7% to 34.0%.[^2] Perhaps the most surprising thing about this analysis is the **magnitude** of the effect. How can the NRA convention, which is attended by way fewer than 1% of all US gun owners, cause a 20% drop in gun-related injuries?[^3]
 
@@ -61,6 +62,26 @@ ggplot(data = x, aes(date, 100000 * gunshot/total)) +
 ```
 
 Whether or not smoothing the observations makes sense depends on your priors about the relationships among injury rates over time.
+
+## Differences Between Convention Weeks and Other Weeks
+
+Is the difference between the rate of gunshot injuries during NRA conventions different from the rate in the three weeks before and after the convention? I *think* this depends on how we ask the question. We have `r sum(x$convention)` observations for convention weeks and 
+`r sum(! x$convention)` observations for non-convention weeks. Define the firearm injury rate per 100,000 as the number of gunshot injuries divided by the total number of hospital visits, all multiplied by 100,000. A simple t-test produces:
+
+```{r}
+t.test(x$rate[x$convention == 0], x$rate[x$convention != 0])
+```
+
+If we assume that we have `r nrow(x)` individual observations, then the difference between the injury rates between NRA convention weeks and non-NRA convention weeks is not statistically significant. 
+
+How can the authors report that the difference is significant? Because they do not frame the question in this fashion. Instead, they pool all the injuries and visits during convention weeks and compare that proportion to the total injuries and visits during non-convention weeks.
+
+```{r}
+prop.test(y$gunshots, y$totals)
+```
+
+Note that this confidence interval is close (but does not match exactly) with the one they calculated in the paper. Either way, a proportion test does produce a statistically significant result. It is unclear (to me) which test is more appropriate in this context.
+
 
 [^1]: Jena AB, Olenski AR. [Reduction in firearm injuries during NRA annual conventions](http://www.nejm.org/doi/full/10.1056/NEJMc1712773). N Engl J Med 2018;378:866-7. DOI: 10.1056/NEJMc1712773. Thanks to Anupam Jena for providing the data and for helpful discussion.
 
