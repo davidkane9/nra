@@ -143,7 +143,7 @@ x$rate &lt;- (100000 * x$gunshot)/x$total</code></pre>
 <p>Whether or not smoothing the observations makes sense depends on your priors about the relationships among injury rates over time.</p>
 <div id="differences-between-convention-weeks-and-other-weeks" class="section level2">
 <h2>Differences Between Convention Weeks and Other Weeks</h2>
-<p>Is the difference between the rate of gunshot injuries during NRA conventions different from the rate in the three weeks before and after the convention? I <em>think</em> this depends on how we ask the question. We have 9 observations for convention weeks and 54 observations for non-convention weeks. Define the firearm injury rate per 100,000 as the number of gunshot injuries divided by the total number of hospital visits, all multiplied by 100,000. A simple t-test produces:</p>
+<p>Is the difference between the rate of gunshot injuries during NRA conventions different from the rate in the three weeks before and after the convention?<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> I <em>think</em> this depends on how we ask the question. We have 9 observations for convention weeks and 54 observations for non-convention weeks. Define the firearm injury rate per 100,000 as the number of gunshot injuries divided by the total number of hospital visits, all multiplied by 100,000. A simple t-test produces:</p>
 <pre class="r"><code>t.test(x$rate[x$convention == 0], x$rate[x$convention != 0])</code></pre>
 <pre><code>## 
 ##  Welch Two Sample t-test
@@ -179,6 +179,7 @@ x$rate &lt;- (100000 * x$gunshot)/x$total</code></pre>
 <li id="fn1"><p>Jena AB, Olenski AR. <a href="http://www.nejm.org/doi/full/10.1056/NEJMc1712773">Reduction in firearm injuries during NRA annual conventions</a>. N Engl J Med 2018;378:866-7. DOI: 10.1056/NEJMc1712773. Thanks to Anupam Jena for providing the data and for helpful discussion.<a href="#fnref1">↩</a></p></li>
 <li id="fn2"><p>I am not sure how this confidence interval is calculated.<a href="#fnref2">↩</a></p></li>
 <li id="fn3"><p>See related discussion at Andrew Gelman’s <a href="http://andrewgelman.com/2018/03/05/no-dont-believe-reduction-firearm-injuries-nra-annual-conventions-story/">blog</a>.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Thanks to Dale Lehman for highlighting this issue.<a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
 

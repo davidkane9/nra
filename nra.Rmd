@@ -65,7 +65,7 @@ Whether or not smoothing the observations makes sense depends on your priors abo
 
 ## Differences Between Convention Weeks and Other Weeks
 
-Is the difference between the rate of gunshot injuries during NRA conventions different from the rate in the three weeks before and after the convention? I *think* this depends on how we ask the question. We have `r sum(x$convention)` observations for convention weeks and 
+Is the difference between the rate of gunshot injuries during NRA conventions different from the rate in the three weeks before and after the convention?[^4] I *think* this depends on how we ask the question. We have `r sum(x$convention)` observations for convention weeks and 
 `r sum(! x$convention)` observations for non-convention weeks. Define the firearm injury rate per 100,000 as the number of gunshot injuries divided by the total number of hospital visits, all multiplied by 100,000. A simple t-test produces:
 
 ```{r}
@@ -88,3 +88,5 @@ Note that this confidence interval is close (but does not match exactly) with th
 [^2]: I am not sure how this confidence interval is calculated. 
 
 [^3]: See related discussion at Andrew Gelman's [blog](http://andrewgelman.com/2018/03/05/no-dont-believe-reduction-firearm-injuries-nra-annual-conventions-story/).
+
+[^4]: Thanks to Dale Lehman for highlighting this issue.
