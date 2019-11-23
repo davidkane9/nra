@@ -40,9 +40,9 @@ x %>% group_by(date) %>% summarize(gunshots = sum(gunshot), totals = sum(total),
   ggplot(aes(date, rate)) + 
     geom_point() +
     geom_errorbar(aes(ymin = rate_low, ymax = rate_high, width = 0.1)) +
-    labs(title = "Firearm Injuries among Commercially Insured Persons That Occurred on\nDates of National Rifle Association (NRA) Annual Conventions and Control Dates,\n 2007–2015.",  
+    labs(title = "Firearm Injuries among Commercially Insured Persons That Occurred\non Dates of National Rifle Association (NRA) Annual Conventions\nand on Control Dates, 2007-2015.",  
          x = "Weeks Relative to NRA Convention",
-         y = "Rate of Firearm Injuries\n(beneficiaries with an injury per 100,000 persons)")
+         y = "Rate of Firearm Injuries\n(beneficiaries with an injury per 100,000 persons)") +
   ylim(0, 2)
 ```
 
