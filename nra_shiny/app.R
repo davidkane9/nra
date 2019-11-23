@@ -1,57 +1,11 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+# Simple Shiny app example for Gov 1005
 
 library(shiny)
-library(markdown)
 
-
-ui <- navbarPage("Navbar!",
-                 tabPanel("Plot",
-                          sidebarLayout(
-                              sidebarPanel(
-                                  radioButtons("plotType", "Plot type",
-                                               c("Scatter"="p", "Line"="l")
-                                  )
-                              ),
-                              mainPanel(
-                                  plotOutput("plot")
-                              )
-                          )
-                 ),
-                 tabPanel("Summary",
-                          verbatimTextOutput("summary")
-                 ),
-                 navbarMenu("More",
-                            tabPanel("Table",
-                                     DT::dataTableOutput("table")
-                            ),
-                            tabPanel("About",
-                                     fluidRow(
-                                         column(6,
-                                                includeMarkdown("about.md")
-                                         ),
-                                         column(3,
-                                                img(class="img-polaroid",
-                                                    src=paste0("http://upload.wikimedia.org/",
-                                                               "wikipedia/commons/9/92/",
-                                                               "1919_Ford_Model_T_Highboy_Coupe.jpg")),
-                                                tags$small(
-                                                    "Source: Photographed at the Bay State Antique ",
-                                                    "Automobile Club's July 10, 2005 show at the ",
-                                                    "Endicott Estate in Dedham, MA by ",
-                                                    a(href="http://commons.wikimedia.org/wiki/User:Sfoskett",
-                                                      "User:Sfoskett")
-                                                )
-                                         )
-                                     )
-                            )
-                 )
+ui <- navbarPage("App Title",
+                 tabPanel("Plot"),
+                 tabPanel("Summary"),
+                 tabPanel("Table")
 )
 
 
@@ -70,6 +24,4 @@ server <- function(input, output, session) {
     }
 
 
-
-# Run the application 
 shinyApp(ui = ui, server = server)
