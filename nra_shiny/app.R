@@ -2,26 +2,14 @@
 
 library(shiny)
 
-ui <- navbarPage("App Title",
+ui <- navbarPage("NRA Conventions and Hospital Admissions",
                  tabPanel("Plot"),
-                 tabPanel("Summary"),
-                 tabPanel("Table")
-)
+                 tabPanel("Story"),
+                 tabPanel("About")
+                )
 
 
-server <- function(input, output, session) {
-        output$plot <- renderPlot({
-            plot(cars, type=input$plotType)
-        })
-        
-        output$summary <- renderPrint({
-            summary(cars)
-        })
-        
-        output$table <- DT::renderDataTable({
-            DT::datatable(cars)
-        })
-    }
+server <- function(input, output, session) {}
 
 
 shinyApp(ui = ui, server = server)
