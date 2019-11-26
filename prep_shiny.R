@@ -14,5 +14,6 @@
 # in that directory so it is accessible from the "top" of the app directory
 # structure.
 
+
 library(fs)
 file_copy("nra.pdf", "nra_shiny/www")

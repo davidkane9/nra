@@ -2,20 +2,15 @@
 
 library(shiny)
 
+# I still need to add the contents for these panels, but not today.
+
 ui <- navbarPage("NRA Conventions and Hospital Admissions",
-                 tabPanel("Plot",
-                          downloadLink("downloadData", "Download")),
+                 tabPanel("Plot"),
                  tabPanel("Story"),
-                 tabPanel("About")
-                )
+                 tabPanel("About"))
 
 
-server <- function(input, output, session) {
-  
-  # output$downloadData <- downloadHandler(
-  #   filename = "nra.pdf")
-  
-}
+server <- function(input, output, session) {}
 
 
 shinyApp(ui = ui, server = server)
