@@ -4,6 +4,7 @@ author: "David Kane"
 date: "March 22, 2018"
 output:
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -20,6 +21,10 @@ x$convention <- ifelse(x$date == 0, TRUE, FALSE)
 x$rate <- (100000 * x$gunshot)/x$total
 ```
 
+```{r, include=FALSE}
+x %>% write_csv("clean_yearly.csv")
+```
+
 With this raw data, we can calculate the total firearm injuries and hospital visits and then, with those totals, calculate a rate per 100,000, as in the article.
 
 ```{r}
@@ -32,18 +37,7 @@ These total rates match those in the article. Convention weeks seem to be much s
 We can also look at the data by the seven individual weeks surrounding the convention, thereby producing a graphic not dissimilar to their Figure 1 (B) and a close match to their Figure S1. 
 
 ```{r, echo=FALSE}
-x %>% group_by(date) %>% summarize(gunshots = sum(gunshot), totals = sum(total), 
-                                   rate = 100000 * gunshots/totals, 
-                                   rate_low = as.numeric(prop.test(gunshots, totals)$conf.int[1] * 100000),
-                                   rate_high = as.numeric(prop.test(gunshots, totals)$conf.int[2] * 100000)
-                                   ) %>% 
-  ggplot(aes(date, rate)) + 
-    geom_point() +
-    geom_errorbar(aes(ymin = rate_low, ymax = rate_high, width = 0.1)) +
-    labs(title = "Firearm Injuries among Commercially Insured Persons That Occurred\non Dates of National Rifle Association (NRA) Annual Conventions\nand on Control Dates, 2007-2015.",  
-         x = "Weeks Relative to NRA Convention",
-         y = "Rate of Firearm Injuries\n(beneficiaries with an injury per 100,000 persons)") +
-  ylim(0, 2)
+read_rds("graphics/combined.rds")
 ```
 
 
@@ -53,13 +47,7 @@ have `r length(unique(x$year))` unique years from `r min(as.numeric(as.character
 
 
 ```{r, echo = FALSE}
-ggplot(data = x, aes(date, 100000 * gunshot/total)) + 
-  geom_point() +
-  geom_smooth(method = "loess") + 
-  scale_x_discrete(limits = seq(-3, 3, by = 1)) +
-  ggtitle("Firearm Injury Rate per 100,000 Hospital Visits Around NRA Conventions") +
-  ylab("Firearm Injury Rate per 100,000") +
-  xlab("Weeks Around NRA Conventions")
+read_rds("graphics/separate.rds")
 ```
 
 Whether or not smoothing the observations makes sense depends on your priors about the relationships among injury rates over time.

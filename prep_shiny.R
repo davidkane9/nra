@@ -14,6 +14,36 @@
 # in that directory so it is accessible from the "top" of the app directory
 # structure.
 
-
 library(fs)
+library(tidyverse)
+
+dir_create("graphics")
+
+combined_plot <- x %>% 
+  group_by(date) %>% 
+  summarize(gunshots = sum(gunshot), 
+            totals = sum(total), 
+            rate = 100000 * gunshots/totals, 
+            rate_low = as.numeric(prop.test(gunshots, totals)$conf.int[1] * 100000),
+            rate_high = as.numeric(prop.test(gunshots, totals)$conf.int[2] * 100000)
+  ) %>% 
+  ggplot(aes(date, rate)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin = rate_low, ymax = rate_high, width = 0.1)) +
+  labs(title = "Firearm Injuries among Commercially Insured Persons That Occurred\non Dates of National Rifle Association (NRA) Annual Conventions\nand on Control Dates, 2007-2015.",  
+       x = "Weeks Relative to NRA Convention",
+       y = "Rate of Firearm Injuries\n(beneficiaries with an injury per 100,000 persons)") +
+  ylim(0, 2)
+combined_plot %>% write_rds("graphics/combined.rds")
+
+separate_plot <- ggplot(data = x, aes(date, 100000 * gunshot/total)) + 
+  geom_point() +
+  geom_smooth(method = "loess") + 
+  scale_x_discrete(limits = seq(-3, 3, by = 1)) +
+  ggtitle("Firearm Injury Rate per 100,000 Hospital Visits Around NRA Conventions") +
+  ylab("Firearm Injury Rate per 100,000") +
+  xlab("Weeks Around NRA Conventions")
+separate_plot %>% write_rds("graphics/separate.rds")
+
+file_copy("graphics/*", "nra_shiny")
 file_copy("nra.pdf", "nra_shiny/www")
